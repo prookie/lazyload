@@ -37,6 +37,7 @@
                 callback_error: null,
                 callback_set: null,
                 callback_processed: null,
+                callback_accept: null,
                 placeholder: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
             };
             _supportsAddEventListener = !!window.addEventListener;
@@ -339,11 +340,13 @@
                 continue;
             }
             if (_isInsideViewport(element, settings.container, settings.threshold)) {
-                /* Forking behaviour depending on show_while_loading (true value is ideal for progressive jpeg). */
-                if (settings.show_while_loading) {
-                    this._showOnAppear(element);
-                } else {
-                    this._showOnLoad(element);
+                if( !settings.callback_processed || settings.callback_accept(element) == true ) {
+                    /* Forking behaviour depending on show_while_loading (true value is ideal for progressive jpeg). */
+                    if (settings.show_while_loading) {
+                        this._showOnAppear(element);
+                    } else {
+                        this._showOnLoad(element);
+                    }
                 }
                 /* Marking the element as processed. */
                 processedIndexes.push(i);
